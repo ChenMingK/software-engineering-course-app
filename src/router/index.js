@@ -1,27 +1,36 @@
 import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Router from 'vue-router'
 
-Vue.use(VueRouter)
+Vue.use(Router)
 
-const routes = [
-  {
-    path: '/',
-    name: 'home',
-    component: Home
-  },
-  {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
-]
-
-const router = new VueRouter({
-  routes
+export default new Router({
+  routes: [
+    {
+      path: '/',
+      component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue'),
+      meta: { title: '首页' },
+      children: [
+        {
+          path: '/resource',
+          component: () => import(/* webpackChunkName: "resource" */ '../views/Resource.vue'),
+          meta: { title: '查看资料' }
+        },
+        {
+          path: '/select',
+          component: () => import(/* webpackChunkName: "resource" */ '../views/Select.vue'),
+          meta: { title: '选择课题' }
+        },
+        {
+          path: '/upload',
+          component: () => import(/* webpackChunkName: "resource" */ '../views/Upload.vue'),
+          meta: { title: '上传资料' }
+        },
+        {
+          path: '/score',
+          component: () => import(/* webpackChunkName: "resource" */ '../views/Score.vue'),
+          meta: { title: '查看得分' }
+        }
+      ]
+    }
+  ]
 })
-
-export default router
