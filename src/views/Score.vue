@@ -1,50 +1,55 @@
 <template>
-  <el-table
-    :data="tableData"
-    border
-    style="width: 100%">
-    <el-table-column
-      prop="date"
-      label="日期"
-      width="180">
-    </el-table-column>
-    <el-table-column
-      prop="name"
-      label="姓名"
-      width="180">
-    </el-table-column>
-    <el-table-column
-      prop="address"
-      label="地址">
-    </el-table-column>
-  </el-table>
+  <div class="score-wrap">
+    <span>小组得分: {{teamScore}}</span>
+    <el-divider></el-divider>
+    <span>个人得分: {{personalScore}}</span>
+    <el-divider></el-divider>
+    <el-card class="box-card" shadow="always">
+      <div slot="header" class="clearfix">
+        <span>教师评价</span>
+        <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+      </div>
+      <div class="text item">
+        balabalabala
+      </div>
+    </el-card>
+  </div>
 </template>
 
 <script>
   export default {
-    data() {
+    data () {
       return {
-        tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }]
+        teamScore: 100,
+        personalScore: 88
       }
     }
   }
 </script>
 
 <style lang='scss' scoped>
+  .score-wrap {
+    padding: 20px;
+    width: 800px;
+  }
+  .text {
+    font-size: 14px;
+  }
+
+  .item {
+    margin-bottom: 18px;
+  }
+
+  .clearfix:before,
+  .clearfix:after {
+    display: table;
+    content: "";
+  }
+  .clearfix:after {
+    clear: both
+  }
+
+  .box-card {
+    width: 480px;
+  }
 </style>

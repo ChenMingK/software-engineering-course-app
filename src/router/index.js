@@ -17,18 +17,47 @@ export default new Router({
         },
         {
           path: '/select',
-          component: () => import(/* webpackChunkName: "resource" */ '../views/Select.vue'),
+          component: () => import(/* webpackChunkName: "select" */ '../views/Select.vue'),
           meta: { title: '选择课题' }
         },
         {
           path: '/upload',
-          component: () => import(/* webpackChunkName: "resource" */ '../views/Upload.vue'),
+          component: () => import(/* webpackChunkName: "upload" */ '../views/Upload.vue'),
           meta: { title: '上传资料' }
         },
         {
           path: '/score',
-          component: () => import(/* webpackChunkName: "resource" */ '../views/Score.vue'),
+          component: () => import(/* webpackChunkName: "score" */ '../views/Score.vue'),
           meta: { title: '查看得分' }
+        },
+        {
+          path: '/courseSelect',
+          component: () => import(/* webpackChunkName: "courseSelect" */ '../views/CourseSelect.vue'),
+          meta: { title: '选择课题' }
+        },
+        {
+          path: '/uploadSelect',
+          component: () => import(/* webpackChunkName: "uploadSelect" */ '../views/UploadSelect.vue')
+        },
+        {
+          path: '/checkSelect',
+          component: () => import(/* webpackChunkName: "checkSelect" */ '../views/CheckSelect.vue')
+        },
+        {
+          path: '/studentsInfo',
+          component: () => import(/* webpackChunkName: "studentsInfo" */ '../views/StudentsInfo.vue')
+        },
+        {
+          path: '/scoreReport',
+          component: () => import(/* webpackChunkName: "scoreReport" */ '../views/ScoreReport.vue')
+        },
+        {
+          path: '/scoreSchedule',
+          component: () => import(/* webpackChunkName: "scoreSchedule" */ '../views/ScoreSchedule.vue')
+        },
+        {
+          path: '/scoreTeams',
+          component: () => import(/* webpackChunkName: "scoreTeams" */ '../views/ScoreTeams.vue')
         }
       ]
     }
