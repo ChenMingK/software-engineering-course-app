@@ -3,11 +3,12 @@
     <el-upload
       class="upload-demo"
       ref="upload"
-      action="https://jsonplaceholder.typicode.com/posts/"
+      action="http://localhost:8088/upload"
       :on-preview="handlePreview"
       :on-remove="handleRemove"
       :file-list="fileList"
       :auto-upload="false"
+      :http-request='uploadFileMethod'
       style="width: 400px;"  
     >
       <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
@@ -21,21 +22,18 @@
   export default {
     data() {
       return {
-        fileList: [
-          { name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100' },
-          { name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100' }
-        ]
+        fileList: []
       }
     },
     methods: {
       submitUpload () {
-        this.$refs.upload.submit()
+        console.log(this.fileList)
       },
       handleRemove (file, fileList) {
-        console.log(file, fileList)
+        // console.log(file, fileList)
       },
       handlePreview (file) {
-        console.log(file)
+        // console.log(file)
       }
     }
   }
@@ -43,6 +41,15 @@
 
 <style lang='scss' scoped>
   .upload-wrap {
+    width: 600px;
+    height: 400px;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
     padding: 20px;
+    box-sizing: border-box;
+    transition: all linear .2s;
+    &:hover {
+      box-shadow: 0 5px 20px rgba(0,0,0,.1);
+    } 
   }
 </style>

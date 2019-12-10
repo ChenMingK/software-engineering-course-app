@@ -4,20 +4,24 @@
       <el-table
         :data="tableData"
         border
-        style="width: 800px">
+      >
         <el-table-column
-          prop="teamName"
-          label="小组名称"
-          width="180">
+          prop="teamClass"
+          label="小组班级"
+          width="100">
         </el-table-column>
         <el-table-column
-          prop="teamCourse"
-          label="小组选题"
-          width="180">
+          prop="teamLeader"
+          label="小组队长"
+          width="100">
         </el-table-column>
         <el-table-column
           prop="teamMember"
           label="小组成员">
+        </el-table-column>
+        <el-table-column
+          prop="teamCourse"
+          label="小组选题">
         </el-table-column>
       </el-table>
     </template>
@@ -35,45 +39,55 @@
     data () {
       return {
         tableData: [{
-          teamName: '486小队',
-          teamCourse: '王小虎',
-          teamMember: '张三 李四 王五 贼六'
+          teamClass: '计科1601',
+          teamLeader: '小组队长',
+          teamMember: '张三 李四 王五 贼六',
+          teamCourse: '小组选题'
         }, {
-          teamName: '2016-05-02',
-          teamCourse: '王小虎',
-          teamMember: '上海市普陀区金沙江路 1518 弄'
+          teamClass: '计科1601',
+          teamLeader: '小组队长',
+          teamMember: '张三 李四 王五 贼六',
+          teamCourse: '小组选题'
         }, {
-          teamName: '2016-05-02',
-          teamCourse: '王小虎',
-          teamMember: '上海市普陀区金沙江路 1518 弄'
+          teamClass: '计科1601',
+          teamLeader: '小组队长',
+          teamMember: '张三 李四 王五 贼六',
+          teamCourse: '小组选题'
         }, {
-          teamName: '2016-05-02',
-          teamCourse: '王小虎',
-          teamMember: '上海市普陀区金沙江路 1518 弄'
+          teamClass: '计科1601',
+          teamLeader: '小组队长',
+          teamMember: '张三 李四 王五 贼六',
+          teamCourse: '小组选题'
         }, {
-          teamName: '2016-05-02',
-          teamCourse: '王小虎',
-          teamMember: '上海市普陀区金沙江路 1518 弄'
+          teamClass: '计科1601',
+          teamLeader: '小组队长',
+          teamMember: '张三 李四 王五 贼六',
+          teamCourse: '小组选题'
         }, {
-          teamName: '2016-05-02',
-          teamCourse: '王小虎',
-          teamMember: '上海市普陀区金沙江路 1518 弄'
+          teamClass: '计科1601',
+          teamLeader: '小组队长',
+          teamMember: '张三 李四 王五 贼六',
+          teamCourse: '小组选题'
         }, {
-          teamName: '2016-05-02',
-          teamCourse: '王小虎',
-          teamMember: '上海市普陀区金沙江路 1518 弄'
+          teamClass: '计科1601',
+          teamLeader: '小组队长',
+          teamMember: '张三 李四 王五 贼六',
+          teamCourse: '小组选题'
         }, {
-          teamName: '2016-05-02',
-          teamCourse: '王小虎',
-          teamMember: '上海市普陀区金沙江路 1518 弄'
+          teamClass: '计科1601',
+          teamLeader: '小组队长',
+          teamMember: '张三 李四 王五 贼六',
+          teamCourse: '小组选题'
         }, {
-          teamName: '2016-05-02',
-          teamCourse: '王小虎',
-          teamMember: '上海市普陀区金沙江路 1518 弄'
+          teamClass: '计科1601',
+          teamLeader: '小组队长',
+          teamMember: '张三 李四 王五 贼六',
+          teamCourse: '小组选题'
         }, {
-          teamName: '2016-05-02',
-          teamCourse: '王小虎',
-          teamMember: '上海市普陀区金沙江路 1518 弄'
+          teamClass: '计科1601',
+          teamLeader: '小组队长',
+          teamMember: '张三 李四 王五 贼六',
+          teamCourse: '小组选题'
         }]
       }
     }

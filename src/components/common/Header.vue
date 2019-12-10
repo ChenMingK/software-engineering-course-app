@@ -6,19 +6,31 @@
       </div>
     </div>
     <div class="right">
-      <i class="el-icon-bell">消息
+      <i class="el-icon-bell btn">消息
         <span class="btn-bell-badge"></span>
       </i>
-      <i class="el-icon-user">用户名</i>
-      <i class="el-icon-setting">设置</i>
-      <i class="el-icon-help">帮助</i>
-      <i class="el-icon-circle-close">退出</i>
+      <i class="el-icon-user btn">用户名</i>
+      <i class="el-icon-setting btn">设置</i>
+      <i class="el-icon-help btn">帮助</i>
+      <i class="el-icon-switch-button btn" @click="changeIdentify">身份切换</i>
+      <i class="el-icon-circle-close btn" @click="backToLoginPage">退出</i>
     </div>
   </div>
 </template>
 
 <script>
   export default {
+    methods: {
+      changeIdentify () {
+        let identify = this.$store.state.identify === 'teacher' ? 'student' : 'teacher'
+        this.$store.dispatch('setIdentify', identify)
+      },
+      backToLoginPage () {
+        this.$router.push({
+          path: 'login'
+        })
+      }
+    }
   }
 </script>
 
@@ -43,6 +55,9 @@
       margin-right: 30px;
       i {
         margin-right: 15px;
+      }
+      .btn {
+        cursor: pointer;
       }
       .el-icon-bell {
         position: relative;

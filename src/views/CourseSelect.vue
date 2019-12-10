@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import { getTopics } from '../api'
 export default {
   data() {
     return {
@@ -45,16 +46,28 @@ export default {
         '课程题目7'
       ],
       radioData: '0',
-      activeNames: ['1']
+      activeNames: ['1'],
+      // 课题说明
+      introList: {
+        topic1: '',
+        topic2: '',
+        topic3: '',
+        topic4: ''
+      }
     }
   },
   methods: {
     radioChange() {
-      console.log(this.radioData)
+      // console.log(this.radioData)
     },
     handleChange (val) {
-      console.log(val)
+      // console.log(val)
     }
+  },
+  mounted () {
+    getTopics().then(res => {
+      console.log(res.data)
+    })
   }
 }
 </script>

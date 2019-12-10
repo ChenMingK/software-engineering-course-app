@@ -1,6 +1,6 @@
 <template>
   <div class="sidebar">
-    <el-row class="tac" v-if="identify==='student'">
+    <el-row class="tac" v-if="identify==='teacher'">
       <el-col :span="24">
         <el-menu
           default-active="2"
@@ -13,28 +13,6 @@
             <i class="el-icon-document"></i>
             <span slot="title">查看资料</span>
           </el-menu-item>
-          <el-submenu index="resource">
-            <template slot="title">
-              <i class="el-icon-location"></i>
-              <span>查看资料</span>
-            </template>
-            <el-menu-item-group>
-              <template slot="title">分组一</template>
-              <el-menu-item index="1-1">选项1</el-menu-item>
-              <el-menu-item index="1-2">选项2</el-menu-item>
-            </el-menu-item-group>
-            <el-menu-item-group title="分组2">
-              <el-menu-item index="1-3">选项3</el-menu-item>
-            </el-menu-item-group>
-            <el-submenu index="1-4">
-              <template slot="title">选项4</template>
-              <el-menu-item index="1-4-1">选项1</el-menu-item>
-            </el-submenu>
-          </el-submenu>
-          <!-- <el-menu-item index="select">
-            <i class="el-icon-menu"></i>
-            <span slot="title">课程选题</span>
-          </el-menu-item> -->
           <el-menu-item index="upload">
             <i class="el-icon-upload2"></i>
             <span slot="title">上传资料</span>
@@ -71,15 +49,15 @@
             <i class="el-icon-document"></i>
             <span slot="title">查看资料</span>
           </el-menu-item>
-          <el-menu-item index="studentsInfo">
+          <el-menu-item index="studentsInfo" :disabled="identify==='traversal'">
             <i class="el-icon-document"></i>
             <span slot="title">学生选题情况</span>
           </el-menu-item>
-          <el-menu-item index="upload">
+          <el-menu-item index="upload" :disabled="identify==='traversal'">
             <i class="el-icon-upload2"></i>
             <span slot="title">上传资料</span>
           </el-menu-item>
-          <el-submenu index="score">
+          <el-submenu index="score" :disabled="identify==='traversal'">
             <template slot="title">
               <i class="el-icon-menu"></i>
               <span class="title">教师打分</span>
@@ -87,7 +65,7 @@
             <el-menu-item-group>
               <template slot="title">可选操作</template>
               <el-menu-item index="scoreReport">查看小组工作报告</el-menu-item>
-              <el-menu-item index="scoreSchedule">填写小组进度表</el-menu-item>
+              <el-menu-item index="scoreSchedule">查看小组进度</el-menu-item>
               <el-menu-item index="scoreTeams">小组打分</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
@@ -99,17 +77,20 @@
 
 <script>
 export default {
-  data () {
-    return {
-      identify: 'teacher' // 身份，不同身份显示的 menu 不同
+  computed: {
+    identify: function () {
+      return this.$store.state.identify
+    },
+    privilege: function () {
+      return this.$store.state.privilege
     }
   },
   methods: {
     handleOpen(key, keyPath) {
-      console.log(key, keyPath)
+      // console.log(key, keyPath)
     },
     handleClose(key, keyPath) {
-      console.log(key, keyPath)
+      // console.log(key, keyPath)
     }
   }
 }

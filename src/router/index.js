@@ -8,6 +8,7 @@ export default new Router({
     {
       path: '/',
       component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue'),
+      redirect: '/login',
       meta: { title: '首页' },
       children: [
         {
@@ -60,6 +61,18 @@ export default new Router({
           component: () => import(/* webpackChunkName: "scoreTeams" */ '../views/ScoreTeams.vue')
         }
       ]
+    },
+    {
+      path: '/login',
+      component: () => import(/* webpackChunkName: "home" */ '../views/Login.vue')
+    },
+    {
+      path: '/register',
+      component: () => import(/* webpackChunkName: "register" */ '../views/Register.vue')
+    },
+    {
+      path: '*',
+      redirect: '/resource'
     }
   ]
 })
