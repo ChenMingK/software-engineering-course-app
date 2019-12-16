@@ -6,28 +6,40 @@
       </div>
     </div>
     <div class="right">
-      <i class="el-icon-bell btn">消息
+      <i class="el-icon-message-solid btn">消息
         <span class="btn-bell-badge"></span>
       </i>
-      <i class="el-icon-user btn">用户名</i>
-      <i class="el-icon-setting btn">设置</i>
-      <i class="el-icon-help btn">帮助</i>
-      <i class="el-icon-switch-button btn" @click="changeIdentify">身份切换</i>
-      <i class="el-icon-circle-close btn" @click="backToLoginPage">退出</i>
+      <i class="el-icon-user-solid btn">{{ this.username }}</i>
+      <i class="el-icon-s-tools btn" @click="jumpToChangePswPage">修改密码</i>
+      <i class="el-icon-error btn" @click="backToLoginPage">退出</i>
+      <img src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80" class="img" />
     </div>
   </div>
 </template>
 
 <script>
   export default {
+    computed: {
+      username () {
+        const privilege = this.$store.state.privilege
+        if (privilege === '1') {
+          return '学生'
+        } else if (privilege === '2') {
+          return '教师'
+        } else {
+          return '游客'
+        }
+      }
+    },
     methods: {
-      changeIdentify () {
-        let identify = this.$store.state.identify === 'teacher' ? 'student' : 'teacher'
-        this.$store.dispatch('setIdentify', identify)
-      },
       backToLoginPage () {
         this.$router.push({
           path: 'login'
+        })
+      },
+      jumpToChangePswPage () {
+        this.$router.push({
+          path: '/changePassword'
         })
       }
     }
@@ -36,13 +48,16 @@
 
 <style lang='scss' scoped>
   .header {
-    background-color: #B3C0D1;
-    color: #333;
+    background-color: white;
+    color: #97a8be;
     height: 60px;
     width: 100%;
+    padding-left: 200px;
+    box-sizing: border-box;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    box-shadow: 0 1px 4px rgba(0,21,41,.1);
     .left {
       flex: 0 0 30%;
       display: flex;
@@ -52,12 +67,20 @@
       }
     }
     .right {
-      margin-right: 30px;
+      margin-right: 60px;
       i {
         margin-right: 15px;
       }
       .btn {
+        color: #5a5e66;
         cursor: pointer;
+        font-size: 18px;
+      }
+      .img {
+        width: 50px;
+        position: absolute;
+        top: 5px;
+        border-radius: 10px;
       }
       .el-icon-bell {
         position: relative;

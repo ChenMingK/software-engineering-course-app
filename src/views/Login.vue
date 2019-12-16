@@ -12,7 +12,8 @@
         </div>
         <div class="input-password-wrap">
           <span class="el-icon-lock"></span>
-          <input type="password" placeholder="密码" v-model="password"  @keyup.enter="loginCheck">
+          <input type="password" placeholder="密码" v-model="password"  @keyup.enter="loginCheck" >
+          <i class="el-icon-question"></i><span class="forget-text" @click="jumpToForgetPasPage">忘记密码?</span>
         </div>
         <div class="radio-wrap">
           <el-radio v-model="radio" label="1">学生</el-radio>
@@ -51,24 +52,37 @@
         password: '',
         ifWarningShow: false,
         warningMsg: '',
-        radio: '1' // 单选 0 / 1 / 2 管理员，学生，老师
+        radio: '1' // 单选 
       }
     },
     methods: {
+      clickTest () {
+        this.$store.dispatch('setPrivilege', 2)
+        console.log(this.privilege)
+      },
       loginCheck() {
-        let username = this.username
-        let password = this.password
+        let username = this.username.trim()
+        let password = this.password.trim()
+        const radio = this.radio
+        console.log(username, password)
         if (!username || !password) {
           this.showWarningMsg('用户名和密码不能为空')
           return
         }
-        login(username, password).then(res => {
+        login(username, password, radio).then(res => {
           // console.log(res)
           let info = res.data // res.data.data 才是
           const errorCode = info.code
-          console.log(errorCode)
+          // console.log(errorCode)
+          const { id, projectId, teamId, topicId } = res.data.data
           // 检查 error_code 和 msg 来确定下一步操作
           if (errorCode === 200) { // 正确
+            this.$store.dispatch('setNumber', this.username)
+            this.$store.dispatch('setPrivilege', this.radio)
+            this.$store.dispatch('setId', id)
+            this.$store.dispatch('setProjectId', projectId)
+            this.$store.dispatch('setTeamId', teamId)
+            this.$store.dispatch('setTopicId', topicId)
             this.$router.push({
               path: 'resource'
             })
@@ -91,6 +105,11 @@
       jumpToHome () {
         this.$router.push({
           path: 'resource'
+        })
+      },
+      jumpToForgetPasPage () {
+        this.$router.push({
+          path: 'forgetPassword'
         })
       }
     }
@@ -182,6 +201,15 @@
         }
         .input-password-wrap {
           @include inputStyleMixin;
+          .el-icon-question {
+            color: gray;
+            cursor: pointer;
+          }
+          .forget-text {
+            font-size: 12px;
+            cursor: pointer;
+            color: gray;
+          }
         }
         .radio-wrap {
           width: 80%;

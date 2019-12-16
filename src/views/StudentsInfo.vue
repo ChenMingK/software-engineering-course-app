@@ -4,23 +4,24 @@
       <el-table
         :data="tableData"
         border
+        style="width: 80%;"
       >
         <el-table-column
-          prop="teamClass"
-          label="小组班级"
-          width="100">
+          prop="teamName"
+          label="小组名称"
+          width="150">
         </el-table-column>
         <el-table-column
-          prop="teamLeader"
+          prop="leaderName"
           label="小组队长"
-          width="100">
+          width="150">
         </el-table-column>
         <el-table-column
-          prop="teamMember"
+          prop="members"
           label="小组成员">
         </el-table-column>
         <el-table-column
-          prop="teamCourse"
+          prop="topicTitle"
           label="小组选题">
         </el-table-column>
       </el-table>
@@ -35,73 +36,40 @@
 </template>
 
 <script>
+  import { getTeamInfo } from '../api'
   export default {
     data () {
       return {
-        tableData: [{
-          teamClass: '计科1601',
-          teamLeader: '小组队长',
-          teamMember: '张三 李四 王五 贼六',
-          teamCourse: '小组选题'
-        }, {
-          teamClass: '计科1601',
-          teamLeader: '小组队长',
-          teamMember: '张三 李四 王五 贼六',
-          teamCourse: '小组选题'
-        }, {
-          teamClass: '计科1601',
-          teamLeader: '小组队长',
-          teamMember: '张三 李四 王五 贼六',
-          teamCourse: '小组选题'
-        }, {
-          teamClass: '计科1601',
-          teamLeader: '小组队长',
-          teamMember: '张三 李四 王五 贼六',
-          teamCourse: '小组选题'
-        }, {
-          teamClass: '计科1601',
-          teamLeader: '小组队长',
-          teamMember: '张三 李四 王五 贼六',
-          teamCourse: '小组选题'
-        }, {
-          teamClass: '计科1601',
-          teamLeader: '小组队长',
-          teamMember: '张三 李四 王五 贼六',
-          teamCourse: '小组选题'
-        }, {
-          teamClass: '计科1601',
-          teamLeader: '小组队长',
-          teamMember: '张三 李四 王五 贼六',
-          teamCourse: '小组选题'
-        }, {
-          teamClass: '计科1601',
-          teamLeader: '小组队长',
-          teamMember: '张三 李四 王五 贼六',
-          teamCourse: '小组选题'
-        }, {
-          teamClass: '计科1601',
-          teamLeader: '小组队长',
-          teamMember: '张三 李四 王五 贼六',
-          teamCourse: '小组选题'
-        }, {
-          teamClass: '计科1601',
-          teamLeader: '小组队长',
-          teamMember: '张三 李四 王五 贼六',
-          teamCourse: '小组选题'
-        }]
+        tableData: []
       }
+    },
+    mounted () {
+      const teacherId = localStorage.getItem('id')
+      getTeamInfo(teacherId).then(res => {
+        // console.log(res)
+        this.tableData = res.data.data
+        this.tableData.forEach(item => {
+          item.members = item.members.join(',')
+        })
+      })
     }
   }
 </script>
 
 <style lang='scss' scoped>
   .students-info-wrap {
-    position: relative;
-    width: 800px;
+    position: absolute;
+    top: 2px;
+    left: 0;
+    padding: 20px;
+    width: 100%;
+    height: 800px;
+    box-sizing: border-box;
+    background: white;
     .paging-wrap {
-      margin-top: 20px;
       position: absolute;
-      right: 0;
+      right: 340px;
+      margin-top: 10px;
     }
   }
 </style>

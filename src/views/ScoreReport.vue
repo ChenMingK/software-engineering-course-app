@@ -6,7 +6,8 @@
         <el-button style="float: right; padding: 3px 0" type="text">全部下载</el-button>
       </div>
       <div v-for="o in 4" :key="o" class="text item">
-        {{'列表内容 ' + o }}
+        {{'小组名称：' + o }}
+        <span class="teamwork">{{'小组作品：' + 'href'}}</span>
       </div>
     </el-card>
   </div>
@@ -36,6 +37,9 @@
   }
 
   .box-card {
-    width: 480px;
+    width: 1000px;
+    .teamwork {
+      margin-left: 150px;
+    }
   }
 </style>

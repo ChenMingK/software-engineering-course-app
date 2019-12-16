@@ -3,42 +3,50 @@
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="课程资料" name="first">
         <el-card class="box-card">
-          <div v-for="item in downloadList" :key="item" class="text item">
-            <a href="http://cmk1018.cn/wp-content/uploads/2019/04/8.jpg" download>{{item}}</a>
+          <div v-for="(item, index) in downloadList" :key="index" class="text item">
+            <a :href="item.downloadURL" download>{{item.fileName}}</a>
           </div> <!-- https://blog.csdn.net/sinat_29774479/article/details/78404794 -->
         </el-card>
       </el-tab-pane>
-      <el-tab-pane label="学生作品" name="second">学生作品</el-tab-pane>
-      <el-tab-pane label="课程实验" name="third">课程实验</el-tab-pane>
-      <el-tab-pane label="小班讨论" name="fourth">小班讨论</el-tab-pane>
     </el-tabs>
   </div>
 </template>
 
 <script>
+  import { getResource } from '../api'
   export default {
     data () {
       return {
         activeName: 'first',
-        downloadList: [
-          'http://cmk1018.cn/wp-content/uploads/2019/04/8.jpg',
-          'http://x2',
-          'http://x3',
-          'http://x4'
-        ]
+        downloadList: [] // { downloadURL: 'xxx', fileName: 'xxx' }
       }
     },
     methods: {
       handleClick (tab, event) {
         // console.log(tab, event)
       }
+    },
+    mounted () {
+      getResource().then(res => {
+        let fileArray = res.data.data
+        console.log(res)
+        // let downloadListTemp = []
+        fileArray.forEach(item => {
+          this.downloadList.push({
+            downloadURL: 'http://192.168.43.178:8080/v1/download/' + item.id,
+            fileName: item.oldFilename
+          })
+        })
+        console.log(this.downloadList)
+      })
     }
   }
 </script>
 
 <style lang='scss' scoped>
+
   .text {
-    font-size: 14px;
+    font-size: 16px;
   }
 
   .item {
@@ -46,6 +54,9 @@
   }
 
   .box-card {
-    width: 480px;
+    width: 80%;
+    height: 600px;
+    overflow-y: scroll;
   }
+
 </style>

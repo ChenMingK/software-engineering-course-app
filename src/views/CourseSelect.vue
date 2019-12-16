@@ -1,30 +1,16 @@
 <template>
   <div class="course-select-wrap">
     <div class="list-wrap">
-      <div v-for="(item, index) in list" :key="item" class="list-item">
+      <div v-for="(item, index) in topicList" :key="index" class="list-item">
         <el-radio v-model="radioData" :label="index" border @change="radioChange">{{item}}</el-radio>
       </div>
-      <div class="submit-btn">请阅读说明并点击提交</div>
+      <div class="submit-btn" :class="hasSubmitted ? 'has-submit' : ''" @click="submit">请阅读说明并点击提交</div>
     </div>
 
     <div class="info-wrap">
       <el-collapse v-model="activeNames" @change="handleChange" style="width: 900px;">
-        <el-collapse-item title="课题1说明" name="1">
-          <div>与现实生活一致：与现实生活的流程、逻辑保持一致，遵循用户习惯的语言和概念；</div>
-          <div>在界面中一致：所有的元素和结构需保持一致，比如：设计样式、图标和文本、元素的位置等。</div>
-        </el-collapse-item>
-        <el-collapse-item title="课题2说明" name="2">
-          <div>控制反馈：通过界面样式和交互动效让用户可以清晰的感知自己的操作；</div>
-          <div>页面反馈：操作后，通过页面元素的变化清晰地展现当前状态。</div>
-        </el-collapse-item>
-        <el-collapse-item title="课题3说明" name="3">
-          <div>简化流程：设计简洁直观的操作流程；</div>
-          <div>清晰明确：语言表达清晰且表意明确，让用户快速理解进而作出决策；</div>
-          <div>帮助用户识别：界面简单直白，让用户快速识别而非回忆，减少用户记忆负担。</div>
-        </el-collapse-item>
-        <el-collapse-item title="课题4说明" name="4">
-          <div>用户决策：根据场景可给予用户操作建议或安全提示，但不能代替用户进行决策；</div>
-          <div>结果可控：用户可以自由的进行操作，包括撤销、回退和终止当前操作等。</div>
+        <el-collapse-item v-for="(item, index) in introList" :key="index" :title="item.title">
+          <div>{{item.content}}</div>
         </el-collapse-item>
       </el-collapse>
     </div>
@@ -32,28 +18,16 @@
 </template>
 
 <script>
-import { getTopics } from '../api'
+import { getTopics, teamTopicSelect, getProjectInfo } from '../api'
 export default {
   data() {
     return {
-      list: [
-        '课程题目1',
-        '课程题目2',
-        '课程题目3',
-        '课程题目4',
-        '课程题目5',
-        '课程题目6',
-        '课程题目7'
-      ],
-      radioData: '0',
+      topicList: [],
+      radioData: null,
       activeNames: ['1'],
       // 课题说明
-      introList: {
-        topic1: '',
-        topic2: '',
-        topic3: '',
-        topic4: ''
-      }
+      introList: [],
+      hasSubmitted: false
     }
   },
   methods: {
@@ -62,11 +36,51 @@ export default {
     },
     handleChange (val) {
       // console.log(val)
+    },
+    submit () {
+      if (this.hasSubmitted) {
+        return
+      }
+      // console.log(this.topicList[this.radioData])
+      const projectId = this.$store.state.projectId
+      const radioNumber = Number(this.radioData) + 1
+      const _this = this
+      teamTopicSelect(projectId, Number(radioNumber)).then(res => {
+        if (res.data.msg === 'success') {
+          this.$message({
+            message: '提交成功',
+            type: 'success',
+            duration: 1000
+          })
+          _this.hasSubmitted = true
+        } else {
+          this.$message({
+            message: '提交失败',
+            type: 'error',
+            duration: 1000
+          })
+        }
+      })
     }
   },
   mounted () {
+    const projectId = this.$store.state.projectId
     getTopics().then(res => {
-      console.log(res.data)
+      let data = res.data.data
+      data.forEach((item, index) => {
+        this.topicList.push(item.title)
+        this.introList.push({
+          title: `课题${index}说明`,
+          content: item.content
+        })
+      })
+    })
+    
+    getProjectInfo(projectId).then(res => {
+      const topicId = res.data.data.topicId
+      if (topicId !== null && topicId > 0) {
+        this.hasSubmitted = true // 已提交
+      }
     })
   }
 }
@@ -74,9 +88,12 @@ export default {
 
 <style lang='scss' scoped>
   .course-select-wrap {
-    width: 100%;
-    height: 100%;
+    width: 85%;
+    height: 700px;
     display: flex;
+    background: white;
+    padding: 20px;
+    box-sizing: border-box;
     .list-wrap {
       display: flex;
       flex-direction: row;
@@ -87,7 +104,7 @@ export default {
       position: relative;
       .submit-btn {
         position: absolute;
-        bottom: -20px;
+        bottom: -40px;
         left: 0;
         background: #409eff;
         width: 100%;
@@ -103,6 +120,11 @@ export default {
         &:hover {
           opacity: 0.7;
         }
+      }
+      .has-submit {
+        cursor: not-allowed;
+        background: #333;
+        color: white;
       }
     }
     .info-wrap {

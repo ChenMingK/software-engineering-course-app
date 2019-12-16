@@ -1,73 +1,139 @@
 <template>
   <div class="upload-select-wrap">
-    <el-form ref="form" :model="form" label-width="80px" inline style="width: 600px;">
-      <el-form-item label="班级" style="width: 600px;" prop="class">
-        <el-input v-model="form.class"></el-input>
-      </el-form-item>
-      <el-form-item label="组长姓名" prop="leaderName"> <!-- 调用 UI 的 resetFields 方法需要设置 prop -->
-        <el-input v-model="form.leaderName"></el-input>
-      </el-form-item>
-      <el-form-item label="组长学号" prop="leaderNumber">
-        <el-input v-model="form.leaderNumber"></el-input>
-      </el-form-item>
-      <el-form-item label="组员1姓名" prop="teammate1Name">
-        <el-input v-model="form.teammate1Name"></el-input>
-      </el-form-item>
-      <el-form-item label="组员1学号" prop="teammate1Number">
-        <el-input v-model="form.teammate1Number"></el-input>
-      </el-form-item>
-      <el-form-item label="组员2姓名" prop="teammate2Name">
-        <el-input v-model="form.teammate2Name"></el-input>
-      </el-form-item>
-      <el-form-item label="组员2学号" prop="teammate2Number">
-        <el-input v-model="form.teammate2Number"></el-input>
-      </el-form-item>
-      <el-form-item label="组员3姓名" prop="teammate3Name">
-        <el-input v-model="form.teammate3Name"></el-input>
-      </el-form-item>
-      <el-form-item label="组员3学号" prop="teammate3Number">
-        <el-input v-model="form.teammate3Number"></el-input>
-      </el-form-item>
-      <el-form-item label="组员4姓名" prop="teammate4Name">
-        <el-input v-model="form.teammate4Name"></el-input>
-      </el-form-item>
-      <el-form-item label="组员4学号" prop="teammate4Number">
-        <el-input v-model="form.teammate4Number"></el-input>
-      </el-form-item>
-      
-      <el-form-item>
-        <el-button type="primary" @click="onSubmit">提交</el-button>
-        <el-button @click="resetForm">重置</el-button>
-      </el-form-item>
-    </el-form>
+    <div class="team-input-wrap">
+      <el-input
+        class="input-teamName"
+        v-model="teamName"
+        placeholder="请输入队伍名称"
+        style="width: 200px; height: 50px; line-height: 50px;"
+        :disabled="submitTeamDisabled"
+      >
+      </el-input>
+      <el-button :disabled="submitTeamDisabled" class="confirm-btn" @click="createTeam">点击创建</el-button>
+    </div>
+    <div class="tag-input-wrap">
+      <el-input
+        class="input-new-tag"
+        v-model="inputValue"
+        placeholder="+新组员(输入学号)"
+        @keyup.enter.native="handleInputConfirm"
+        ref="saveTagInput"
+        style="width: 200px; height: 50px; line-height: 50px;"
+      >
+      </el-input>
+      <el-button class="confirm-btn" @click="submit">确定提交</el-button>
+    </div> 
+    <div class="tags-wrap">
+      <el-tag
+        :key="tag"
+        v-for="tag in dynamicTags"
+        closable
+        :disable-transitions="false"
+        @close="handleClose(tag)"
+        style="font-size: 18px !important;">
+        {{tag}}
+      </el-tag>
+    </div>
+    
   </div>
 </template>
 
 <script>
+  import { createTeam, getStudentInfoByNumber, studetnJoinTeam } from '../api'
   export default {
     data () {
       return {
-        form: {
-          class: '',
-          leaderName: '',
-          leaderNumber: '',
-          teammate1Name: '',
-          teammate1Number: '',
-          teammate2Name: '',
-          teammate2Number: '',
-          teammate3Name: '',
-          teammate3Number: '',
-          teammate4Name: '',
-          teammate4Number: ''
-        }
+        dynamicTags: [],
+        inputVisible: false,
+        inputValue: '',
+        teamName: '',
+        submitTeamDisabled: false
+      }
+    },
+    computed: {
+      teamId: function () {
+        return this.$store.state.teamId
       }
     },
     methods: {
-      onSubmit () {
-        // console.log('submit!')
+      handleClose(tag) {
+        this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1)
       },
-      resetForm () {
-        this.$refs.form.resetFields()
+
+      handleInputConfirm() {
+        let inputValue = this.inputValue
+        let major, name, info
+        const teamId = this.teamId
+        if (this.inputValue === null || this.inputValue.length === 0) {
+          return
+        }
+        getStudentInfoByNumber(inputValue, teamId).then(res => {
+          // console.log(res)
+          if (res.data.code !== 500) {
+            console.log(res)
+            let data = res.data.data
+            major = data.major
+            name = data.name
+
+            // 标签
+            info = inputValue + ' ' + major + ' ' + name
+            if (inputValue) {
+              this.dynamicTags.push(info)
+            }
+            this.inputVisible = false
+            this.inputValue = ''
+            // 学生加入小组
+            studetnJoinTeam(inputValue, teamId).then(res => {
+              if (res.data.code !== 500) {
+                this.$message({
+                  message: '提交成功',
+                  type: 'success',
+                  duration: 1000
+                })
+              } else {
+                this.$message({
+                  message: '提交失败，请重试',
+                  type: 'error',
+                  duration: 1000
+                })
+              }
+            })
+          }
+        })
+      },
+      // 创建小组
+      createTeam () {
+        const teamName = this.teamName
+        createTeam(teamName).then(res => {
+          let code = res.data.code
+          if (code === 200) {
+            this.teamnameEditable = true
+          }
+        })
+      },
+      // 提交表单
+      submit () {
+        this.$confirm('提交后信息不可再修改，确定提交?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '提交成功!'
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          })          
+        })
+      }
+    },
+    mounted () {
+      const teamId = this.$store.state.teamId
+      if (teamId > 0) {
+        this.submitTeamDisabled = true
       }
     }
   }
@@ -75,17 +141,51 @@
 
 <style lang='scss' scoped>
   .upload-select-wrap {
-    display: flex;
-    width: 900px;
-    margin-left: 50px;
+    width: 85%;
+    height: 700px;
     box-sizing: border-box;
     border: 1px solid #ebebeb;
     border-radius: 3px;
     transition:.2s;
     padding: 20px;
+    background: white;
     &:hover {
       box-shadow: 0 0 8px 0 rgba(232, 237, 250, .6),
                   0 2px 4px 0 rgba(232, 237, 250, .5);
     }
+    .tags-wrap {
+      position: absolute;
+      left: 50px;
+      top: 200px;
+      width: 400px;
+    }
+    .confirm-btn {
+      margin-left: 20px;
+      height: 42px;
+      line-height: 30px;
+      padding-top: 0;
+      padding-bottom: 0;
+      font-size: 18px !important;
+    }
+    .team-input-wrap {
+      width: 1000px;
+      margin-bottom: 10px;
+    }
+    .tag-input-wrap {
+      width: 1000px;
+      margin-bottom: 10px;
+    }
+  }
+  .el-tag {
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+  .button-new-tag {
+    margin-left: 10px;
+    height: 50px;
+    line-height: 50px;
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: 18px !important;
   }
 </style>
