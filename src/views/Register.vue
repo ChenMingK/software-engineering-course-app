@@ -85,7 +85,14 @@
           const errorCode = info.code
           // 检查error_code和msg来确定下一步操作
           if (errorCode === 200) { // 注册成功
-            this.$router.push({ name: 'home', params: { privilege: info.privilege, username: username } })
+            this.$message({
+              type: 'success',
+              message: '注册成功',
+              duration: 1000
+            })
+            this.$router.push({
+              path: 'login'
+            })
           } else {
             // 注册失败
           }

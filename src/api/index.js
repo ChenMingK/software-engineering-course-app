@@ -66,19 +66,16 @@ export function getResource () {
 }
 
 // 创建队伍
-export function createTeam (teamName, _projectId = 1, _studentId = 1) {
-  let projectId = localStorage.getItem('projectId')
-  let studentId = localStorage.getItem('id')
-  if (!projectId) {
-    projectId = _projectId
-  }
-  if (!studentId) {
-    studentId = _studentId
-  }
+export function createTeam (teamName, _studentId = 1) {
+  // let studentId = localStorage.getItem('id')
+  // if (!studentId) {
+  //   studentId = _studentId
+  // }
   return axios({
     method: 'post',
-    url: `${BASE_URL}/project/origination/student/${studentId}`,
+    url: `${BASE_URL}/team/origination`,
     data: {
+      studentId: _studentId,
       teamName
     }
   })
@@ -120,7 +117,7 @@ export function deleteStudentFromTeamByNumber (studentId) {
 
 // Student
 // 选择课程题目
-export function teamTopicSelect (_projectId, _topicId) {
+export function teamTopicSelect (_projectId = 1, _topicId) {
   let projectId = localStorage.getItem('projectId')
   let topicId = localStorage.getItem('topicId')
   if (!projectId) {
@@ -227,5 +224,13 @@ export function postComment (projectId, review) {
     data: {
       review
     }
+  })
+}
+
+// 流程
+export function scheduleUpdate (projectId) {
+  return axios({
+    method: 'post',
+    url: `${BASE_URL}/project/${projectId}/submission/progress`
   })
 }

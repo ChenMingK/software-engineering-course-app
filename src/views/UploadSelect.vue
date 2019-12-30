@@ -39,7 +39,7 @@
 </template>
 
 <script>
-  import { createTeam, getStudentInfoByNumber, studetnJoinTeam } from '../api'
+  import { createTeam, getStudentInfoByNumber, studetnJoinTeam, scheduleUpdate } from '../api'
   export default {
     data () {
       return {
@@ -103,11 +103,23 @@
       },
       // 创建小组
       createTeam () {
+        // const studentId = Number(this.$store.state.id)
+        let studentId = localStorage.getItem('id')
+        let projectId = localStorage.getItem('projectId')
         const teamName = this.teamName
-        createTeam(teamName).then(res => {
+        createTeam(teamName, studentId).then(res => {
           let code = res.data.code
           if (code === 200) {
-            this.teamnameEditable = true
+            this.submitTeamDisabled = true
+            this.$message({
+              type: 'success',
+              message: '创建成功',
+              duration: 1000
+            })
+            console.log(res)
+            console.log(res.data.data.teamId)
+            this.$store.dispatch('setTeamId', res.data.data.teamId)
+            scheduleUpdate(projectId)
           }
         })
       },
@@ -122,6 +134,7 @@
             type: 'success',
             message: '提交成功!'
           })
+          this.inputValue = ''
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -131,7 +144,10 @@
       }
     },
     mounted () {
-      const teamId = this.$store.state.teamId
+      let teamId = this.$store.state.teamId
+      if (!teamId) {
+        teamId = localStorage.getItem('teamId')
+      }
       if (teamId > 0) {
         this.submitTeamDisabled = true
       }

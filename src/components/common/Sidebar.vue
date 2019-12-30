@@ -63,7 +63,7 @@
             <i class="el-icon-upload2"></i>
             <span slot="title">上传资料</span>
           </el-menu-item>
-          <el-menu-item index="uploadTopics">
+          <el-menu-item index="uploadTopics" :disabled="privilege !== '2'">
             <i class="el-icon-upload"></i>
             <span slot="title">上传课题</span>
           </el-menu-item>

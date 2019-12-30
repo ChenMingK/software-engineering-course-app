@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { getTopics, teamTopicSelect, getProjectInfo } from '../api'
+import { getTopics, teamTopicSelect, getProjectInfo, scheduleUpdate } from '../api'
 export default {
   data() {
     return {
@@ -42,9 +42,12 @@ export default {
         return
       }
       // console.log(this.topicList[this.radioData])
-      const projectId = this.$store.state.projectId
+      let projectId = this.$store.state.projectId
       const radioNumber = Number(this.radioData) + 1
       const _this = this
+      if (!projectId) {
+        projectId = 1
+      }
       teamTopicSelect(projectId, Number(radioNumber)).then(res => {
         if (res.data.msg === 'success') {
           this.$message({
@@ -53,6 +56,7 @@ export default {
             duration: 1000
           })
           _this.hasSubmitted = true
+          scheduleUpdate(projectId)
         } else {
           this.$message({
             message: '提交失败',
@@ -77,9 +81,11 @@ export default {
     })
     
     getProjectInfo(projectId).then(res => {
-      const topicId = res.data.data.topicId
-      if (topicId !== null && topicId > 0) {
-        this.hasSubmitted = true // 已提交
+      if (res.data.data !== null) {
+        const topicId = res.data.data.topicId
+        if (topicId !== null && topicId > 0) {
+          this.hasSubmitted = true // 已提交
+        }
       }
     })
   }
@@ -98,7 +104,7 @@ export default {
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
-      height: 250px;
+      height: 400px;
       justify-content: space-between;
       flex: 0 0 20%;
       position: relative;

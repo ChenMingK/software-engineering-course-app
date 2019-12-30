@@ -18,7 +18,7 @@
         <div class="radio-wrap">
           <el-radio v-model="radio" label="1">学生</el-radio>
           <el-radio v-model="radio" label="2">老师</el-radio>
-          <el-radio v-model="radio" label="0">管理员</el-radio>
+          <!-- <el-radio v-model="radio" label="0">管理员</el-radio> -->
         </div>
         <div class="warning-wrap">
           <span class="icon-warning"></span>
@@ -74,7 +74,10 @@
           let info = res.data // res.data.data 才是
           const errorCode = info.code
           // console.log(errorCode)
-          const { id, projectId, teamId, topicId } = res.data.data
+          let { id, projectId, teamId, topicId } = res.data.data
+          if (!teamId) {
+            teamId = 0
+          }
           // 检查 error_code 和 msg 来确定下一步操作
           if (errorCode === 200) { // 正确
             this.$store.dispatch('setNumber', this.username)
@@ -103,6 +106,7 @@
         })
       },
       jumpToHome () {
+        this.$store.dispatch('setPrivilege', 3)
         this.$router.push({
           path: 'resource'
         })
